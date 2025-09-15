@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Semaphore</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    .question { font-size: 1.5em; margin: 20px; }
+    .timer { font-size: 1.2em; color: red; margin: 10px; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    #result { font-weight: bold; margin: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Kuis Sandi Semaphore</h1>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <div class="timer" id="timer"></div>
+    <div id="options"></div>
+  </div>
+  <div id="result"></div>
+
+  <script>
+    const questions = [
+      {q: "Huruf 'A' dalam sandi semaphore adalah posisi?", options:["1","1/2","2"], answer:"1"},
+      {q: "Huruf 'H' dalam sandi semaphore adalah posisi?", options:["1/2","3","4"], answer:"1/2"},
+      {q: "Huruf 'B' dalam sandi semaphore adalah posisi?", options:["2","5","6"], answer:"2"},
+      {q: "Huruf 'C' dalam sandi semaphore adalah posisi?", options:["3","7","8"], answer:"3"},
+      {q: "Huruf 'D' dalam sandi semaphore adalah posisi?", options:["4","9","10"], answer:"4"}
+    ];
+
+    let current = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 30;
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("result").innerText = "Skor akhir kamu: " + score + "/" + questions.length;
+        return;
+      }
+
+      const q = questions[current];
+      document.getElementById("question").innerText = q.q;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+
+      timeLeft = 30;
+      document.getElementById("timer").innerText = "Waktu: " + timeLeft + " detik";
+      clearInterval(timer);
+      timer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      document.getElementById("timer").innerText = "Waktu: " + timeLeft + " detik";
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        current++;
+        showQuestion();
+      }
+    }
+
+    function checkAnswer(selected) {
+      if (selected === questions[current].answer) {
+        score++;
+      }
+      current++;
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
